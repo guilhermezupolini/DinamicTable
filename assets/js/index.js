@@ -1,43 +1,49 @@
 //Executa quando o documento é carregado
 $(document).ready(function () {
 
+	$('#txtDataNascimento').mask('00/00/0000');
+	$('#txtCpf').mask('000.000.000-00');
+	$('#txtRg').mask('00.000.000-0');
+
 	$('#btnAlterar').hide();
+	$('#btnAnt').attr("disabled", "disabled");
+	$('#btnProx').attr("disabled", "disabled");
+
 	var i = 0;
+	var k = 0;
 	var flag = false;
+	var arrayDados = [];
+
+	console.log(arrayDados);
 
     //alert('Documento carregado');
 
-    $('#totalReg').html(i);
+    $('#totalReg').html(arrayDados.length);
+
 
     $('#btnAdicionar').click(function(){
 
-    	if(validaCampos())
+    	if(!validaCampos())
     	{
     		flag = true;
     	    	var id = ++i;
-    	    	var newRow = $("<tr id='tbRow"+id+"'>");
-    	    	var cols = "";
+    	    	
+    	    	var nome = $('#txtNome').val();
+    	    	var cpf = $('#txtCpf').val();
+    	    	var rg = $('#txtRg').val();
+    	    	var nascimento = $('#txtDataNascimento').val();
     	    	var sexo = $('#selSexo').val() == "M" ? "Masculino" : "Feminino";
-    	    	
-    	
-    	    	cols += "<td id='tbNome"+id+"'>"+$('#txtNome').val();+"</td>";
-    	    	cols += "<td id='tbSexo"+id+"'>"+sexo+"</td>";
-    	    	cols += "<td id='tbDtNascimento"+id+"'>"+$('#txtDataNascimento').val();+"</td>";
-    	    	cols += "<td id='tbCpf"+id+"'>"+$('#txtCpf').val();+"</td>";
-    	    	cols += "<td id='tbRg"+id+"'>"+$('#txtRg').val();+"</td>";
-    	    	cols += "<td>";
-    	    	cols += "<button type='button' onclick='EditRow("+id+");' class='btn btn-success'>";
-    	    	cols += "<span class='glyphicon glyphicon-pencil'></span>";
-    	    	cols += "</button>";
-    	    	cols += "<button type='button' onclick='RemoveRow(this);' class='btn btn-danger'>";
-    	    	cols += "<span class='glyphicon glyphicon-remove'></span>";
-    	    	cols += "</button>";
-    	    	cols += "</td>";
-    	
-    	    	newRow.append(cols);
-    	
-    	    	$('#tabela').append(newRow);
-    	    	
+
+    	    	arrayDados.push({
+    	    		nome : nome,
+    	    		cpf : cpf,
+    	    		rg : rg,
+    	    		sexo : sexo,
+    	    		nascimento : nascimento
+    	    	});
+
+    	    	console.log(arrayDados);
+
     	    	$('#totalReg').html(id);
     	    	
     	
@@ -51,6 +57,8 @@ $(document).ready(function () {
     	    	{
     	    		$('#nf').hide();
     	    	}
+
+    	    	carregarTabela(arrayDados);
     	    }
     	    else{
     	    	alert("Todos os campos devem ser devidamente preenchidos!!!");
@@ -77,6 +85,7 @@ $(document).ready(function () {
     	    	
     	
     	    	$('#btnAdicionar').show();
+    	    	$('#btnAdicionar').removeAttr("disabled", "disabled");
     	    	$('#btnAlterar').hide();
     	}
 	    else{
@@ -90,43 +99,33 @@ $(document).ready(function () {
     	$('#txtNome').val(retorno);
     });
 
-    $('#txtDataNascimento').change(function(){
-    	//var value = $('#txtCpf').val();
-    	var retorno = mask($('#txtDataNascimento').val(), "##/##/####");
-    	$('#txtDataNascimento').val(retorno);
-    });
+    carregarTabela = function(dados){
 
-    $('#txtCpf').change(function(){
-    	//var value = $('#txtCpf').val();
-    	var retorno = mask($('#txtCpf').val(), "###.###.###-##");
-    	$('#txtCpf').val(retorno);
-    });
+ 		$('#tabelaBody').html("");
 
-    $('#txtCpf').keyup(function(e){
-    	var cpf = $('#txtCpf').val();
-    	//console.log(e.keyCode);
-    	if((e.keyCode == 8 || e.keyCode == 9 || e.keyCode == 16) || (e.keyCode >= 96 && e.keyCode <= 105))
+    	for (var i = 0; i < dados.length; i++) 
     	{
-    		$('#txtCpf').val(cpf);
-    	}
-    	else
-    	{
-    		$('#txtCpf').val(cpf.substring(0,cpf.length-1));
-    	}
-    });
+	    	var newRow = $("<tr id='tbRow"+i+"'>");
+	    	var cols = "";
+	    	cols += "<td id='tbNome"+i+"'>"+dados[i].nome+"</td>";
+	    	cols += "<td id='tbSexo"+i+"'>"+dados[i].sexo+"</td>";
+	    	cols += "<td id='tbDtNascimento"+i+"'>"+dados[i].nascimento+"</td>";
+	    	cols += "<td id='tbCpf"+i+"'>"+dados[i].cpf+"</td>";
+	    	cols += "<td id='tbRg"+i+"'>"+dados[i].rg+"</td>";
+	    	cols += "<td>";
+	    	cols += "<button type='button' onclick='EditRow("+i+");' class='btn btn-success'>";
+	    	cols += "<span class='glyphicon glyphicon-pencil'></span>";
+	    	cols += "</button>";
+	    	cols += "<button type='button' onclick='RemoveRow(this, "+i+");' class='btn btn-danger'>";
+	    	cols += "<span class='glyphicon glyphicon-remove'></span>";
+	    	cols += "</button>";
+	    	cols += "</td>";
 
-    $('#txtRg').keyup(function(e){
-    	var cpf = $('#txtRg').val();
-    	//console.log(e.keyCode);
-    	if((e.keyCode == 8 || e.keyCode == 9 || e.keyCode == 16) || (e.keyCode >= 96 && e.keyCode <= 105))
-    	{
-    		$('#txtRg').val(cpf);
+	    	newRow.append(cols);
+
+	    	$('#tabelaBody').append(newRow);
     	}
-    	else
-    	{
-    		$('#txtRg').val(cpf.substring(0,cpf.length-1));
-    	}
-    });
+    };
 
     validaCampos = function(){
     	if(
@@ -145,8 +144,12 @@ $(document).ready(function () {
     	}
     };
 
-    RemoveRow = function(item){
+    RemoveRow = function(item, id){
+
     	var confirma = confirm("Deseja remover?");
+    	arrayDados.splice(id, 1);
+
+    	console.log(arrayDados);
 
     	if(confirma)
     	{
@@ -162,6 +165,8 @@ $(document).ready(function () {
 	    		$('#nf').show();
 	    	}
     	}
+
+    	carregarTabela(arrayDados);
     	
     };
 
@@ -173,6 +178,7 @@ $(document).ready(function () {
     	$('#txtDataNascimento').val($('#tbDtNascimento'+id).html());
     	$('#txtCpf').val($('#tbCpf'+id).html());
     	$('#txtRg').val($('#tbRg'+id).html());
+    	$('#btnAdicionar').attr("disabled", "disabled");
     	$('#btnAdicionar').hide();
     	$('#btnAlterar').show();
     	
