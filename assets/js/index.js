@@ -302,7 +302,6 @@ $(document).ready(function () {
     	$('#btnAdicionar').hide();
     	$('#btnAlterar').removeAttr("disabled", "disabled");
     	$('#btnAlterar').show();
-    	
     };
 
     mask = function(val, mask){
