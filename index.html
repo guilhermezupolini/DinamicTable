@@ -69,15 +69,17 @@
                     </tr>
                     <tbody id="tabelaBody">
                         <tr>
-                            <td id="nf"  colspan="6" style="text-align: center;">Nenhum registro adicionado.</td>
+                            <td id="nf" colspan="6" style="text-align: center;">Nenhum registro adicionado.</td>
                         </tr>
                     </tbody>
                 </table>
-                <div class="btn-toolbar" role="toolbar" aria-label="...">
-                    <div class="btn-group btn btn-primary" role="group" aria-label="...">...</div>
-                    <div class="btn-group btn btn-primary" role="group" aria-label="...">...</div>
-                    <div class="btn-group btn btn-primary" role="group" aria-label="...">...</div>
-                </div>
+            </div>
+            <div style="text-align: right;">
+                <button id="btnAnt" class="btn btn-info" type="button">Anterior</button>
+                <button id="btnProx" class="btn btn-info" type="button">Proximo</button>
+            </div>
+            <div hidden="" style="text-align: center;" id="paginacao">
+                <h4>Pagina <span id="numPagina"></span></h4>
             </div>
         </div>
     </form>

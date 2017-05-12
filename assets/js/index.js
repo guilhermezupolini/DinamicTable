@@ -4,47 +4,48 @@ $(document).ready(function () {
 	$('#txtDataNascimento').mask('00/00/0000');
 	$('#txtCpf').mask('000.000.000-00');
 	$('#txtRg').mask('00.000.000-0');
+	$('#txtNome').focus();
 
 	$('#btnAlterar').hide();
 	$('#btnAnt').attr("disabled", "disabled");
 	$('#btnProx').attr("disabled", "disabled");
+	$('#btnAnt').hide();
+	$('#btnProx').hide();
+
+	
 
 	var i = 0;
 	var k = 0;
 	var flag = false;
 	var arrayDados = [];
+	var pagina = 0;
+	var numPagina = 1;
 
 	console.log(arrayDados);
 
-    //alert('Documento carregado');
-
     $('#totalReg').html(arrayDados.length);
+	$('#numPagina').html(numPagina);
 
 
     $('#btnAdicionar').click(function(){
 
     	if(!validaCampos())
     	{
-    		flag = true;
-    	    	var id = ++i;
+    		
+	    	var id = ++i;
     	    	
-    	    	var nome = $('#txtNome').val();
-    	    	var cpf = $('#txtCpf').val();
-    	    	var rg = $('#txtRg').val();
-    	    	var nascimento = $('#txtDataNascimento').val();
-    	    	var sexo = $('#selSexo').val() == "M" ? "Masculino" : "Feminino";
-
     	    	arrayDados.push({
-    	    		nome : nome,
-    	    		cpf : cpf,
-    	    		rg : rg,
-    	    		sexo : sexo,
-    	    		nascimento : nascimento
+    	    		nome : $('#txtNome').val(),
+    	    		cpf : $('#txtCpf').val(),
+    	    		rg : $('#txtRg').val(),
+    	    		sexo : $('#selSexo').val() == "M" ? "Masculino" : "Feminino",
+    	    		nascimento : $('#txtDataNascimento').val()
     	    	});
 
     	    	console.log(arrayDados);
 
     	    	$('#totalReg').html(id);
+
     	    	
     	
     	    	$('#txtNome').val("");
@@ -52,13 +53,14 @@ $(document).ready(function () {
     	    	$('#txtDataNascimento').val("");
     	    	$('#txtCpf').val("");
     	    	$('#txtRg').val("");
+    	    	$('#txtNome').focus();
     	
-    	    	if(flag)
-    	    	{
-    	    		$('#nf').hide();
-    	    	}
+    	    	// if(flag)
+    	    	// {
+    	    	// 	$('#nf').hide();
+    	    	// }
 
-    	    	carregarTabela(arrayDados);
+    	    	carregarTabela();
     	    }
     	    else{
     	    	alert("Todos os campos devem ser devidamente preenchidos!!!");
@@ -66,32 +68,65 @@ $(document).ready(function () {
     });
 
     $('#btnAlterar').click(function(){
-    	if(validaCampos())
+    	if(!validaCampos())
     	{
     		var id = $('#id').val();
-    		var sexo = $('#selSexo').val() == "M" ? "Masculino" : "Feminino";
+    		var nome = $('#txtNome').val();
+	    	var cpf = $('#txtCpf').val();
+	    	var rg = $('#txtRg').val();
+	    	var nascimento = $('#txtDataNascimento').val();
+	    	var sexo = $('#selSexo').val() == "M" ? "Masculino" : "Feminino";
+    		
     	    	
-    	    	$('#tbNome'+id).html($('#txtNome').val());
-    	    	$('#tbSexo'+id).html(sexo);
-    	    	$('#tbDtNascimento'+id).html($('#txtDataNascimento').val());
-    	    	$('#tbCpf'+id).html($('#txtCpf').val());
-    	    	$('#tbRg'+id).html($('#txtRg').val());
+	    	arrayDados[id].nome = nome;
+	    	arrayDados[id].cpf = cpf;
+	    	arrayDados[id].rg = rg;
+	    	arrayDados[id].nascimento = nascimento;
+	    	arrayDados[id].sexo = sexo;
     	
-    	    	$('#txtNome').val("");
-    	    	$('#selSexo').val("");
-    	    	$('#txtDataNascimento').val("");
-    	    	$('#txtCpf').val("");
-    	    	$('#txtRg').val("");
-    	    	
-    	
-    	    	$('#btnAdicionar').show();
-    	    	$('#btnAdicionar').removeAttr("disabled", "disabled");
-    	    	$('#btnAlterar').hide();
+	    	$('#txtNome').val("");
+	    	$('#selSexo').val("");
+	    	$('#txtDataNascimento').val("");
+	    	$('#txtCpf').val("");
+	    	$('#txtRg').val("");
+	    	
+	
+	    	$('#btnAdicionar').show();
+	    	$('#btnAdicionar').removeAttr("disabled", "disabled");
+	    	$('#btnAlterar').hide();
+
+	    	carregarTabela();
     	}
 	    else{
 	    	alert("Todos os campos devem ser devidamente preenchidos!!!");
 	    }
     });
+
+    $('#btnAnt').click(function(){
+    	if(pagina > 0)
+		{
+			carregarTabela(pagina -= 5);
+			numPagina -= 1;
+			$('#numPagina').html(numPagina);
+		}
+		else
+		{
+			alert("Primeira pagina");
+		}
+    });
+
+	$('#btnProx').click(function(){
+		if(pagina < arrayDados.length-5)
+		{
+			carregarTabela(pagina += 5);
+			numPagina += 1;
+			$('#numPagina').html(numPagina);
+		}
+		else
+		{
+			alert("Ultima pagina");
+		}
+	});
 
     $('#txtNome').change(function(){
     	var letra = $('#txtNome').val().charAt(0).toUpperCase();
@@ -99,19 +134,23 @@ $(document).ready(function () {
     	$('#txtNome').val(retorno);
     });
 
-    carregarTabela = function(dados){
+    carregarTabela = function(){
+
+    	// alert(q);
 
  		$('#tabelaBody').html("");
 
-    	for (var i = 0; i < dados.length; i++) 
+ 		
+
+    	for (var i = pagina, j = 0; i < arrayDados.length && j < 5; i++, j++) 
     	{
 	    	var newRow = $("<tr id='tbRow"+i+"'>");
 	    	var cols = "";
-	    	cols += "<td id='tbNome"+i+"'>"+dados[i].nome+"</td>";
-	    	cols += "<td id='tbSexo"+i+"'>"+dados[i].sexo+"</td>";
-	    	cols += "<td id='tbDtNascimento"+i+"'>"+dados[i].nascimento+"</td>";
-	    	cols += "<td id='tbCpf"+i+"'>"+dados[i].cpf+"</td>";
-	    	cols += "<td id='tbRg"+i+"'>"+dados[i].rg+"</td>";
+	    	cols += "<td id='tbNome"+i+"'>"+arrayDados[i].nome+"</td>";
+	    	cols += "<td id='tbSexo"+i+"'>"+arrayDados[i].sexo+"</td>";
+	    	cols += "<td id='tbDtNascimento"+i+"'>"+arrayDados[i].nascimento+"</td>";
+	    	cols += "<td id='tbCpf"+i+"'>"+arrayDados[i].cpf+"</td>";
+	    	cols += "<td id='tbRg"+i+"'>"+arrayDados[i].rg+"</td>";
 	    	cols += "<td>";
 	    	cols += "<button type='button' onclick='EditRow("+i+");' class='btn btn-success'>";
 	    	cols += "<span class='glyphicon glyphicon-pencil'></span>";
@@ -125,6 +164,36 @@ $(document).ready(function () {
 
 	    	$('#tabelaBody').append(newRow);
     	}
+
+    	if (arrayDados.length > 5){
+    		
+    		$('#btnProx').removeAttr("disabled", "disabled");
+    		$('#btnProx').show();
+    		$('#paginacao').show();
+    	}
+
+    	if(pagina >= 5)
+    	{	
+    		$('#btnAnt').removeAttr("disabled", "disabled");
+    		$('#btnAnt').show();
+    	}
+
+    	if (pagina >= 5 && (pagina+5) >= arrayDados.length || arrayDados.length <= 5)
+    	{
+			$('#btnProx').attr("disabled", "disabled");
+    		$('#btnProx').hide();
+    	}
+
+    	if(pagina <= 0)
+    	{
+    		$('#btnAnt').attr("disabled", "disabled");
+    		$('#btnAnt').hide();
+    	}
+
+    	if(arrayDados.length <= 0)
+		{
+			$('#tabelaBody').append("<tr><td id='nf' colspan='6' style='text-align: center;'>Nenhum registro adicionado.</td></tr>");
+		}
     };
 
     validaCampos = function(){
@@ -166,18 +235,18 @@ $(document).ready(function () {
 	    	}
     	}
 
-    	carregarTabela(arrayDados);
+    	carregarTabela();
     	
     };
 
     EditRow = function(id){
-    	var sexo = $('#tbSexo'+id).html() == "Masculino" ? "M" : "F";
+    	var sexo = arrayDados[id].sexo == "Masculino" ? "M" : "F";
     	$('#id').val(id);
-    	$('#txtNome').val($('#tbNome'+id).html());
+    	$('#txtNome').val(arrayDados[id].nome);
     	$('#selSexo').val(sexo);
-    	$('#txtDataNascimento').val($('#tbDtNascimento'+id).html());
-    	$('#txtCpf').val($('#tbCpf'+id).html());
-    	$('#txtRg').val($('#tbRg'+id).html());
+    	$('#txtDataNascimento').val(arrayDados[id].nascimento);
+    	$('#txtCpf').val(arrayDados[id].cpf);
+    	$('#txtRg').val(arrayDados[id].rg);
     	$('#btnAdicionar').attr("disabled", "disabled");
     	$('#btnAdicionar').hide();
     	$('#btnAlterar').show();
