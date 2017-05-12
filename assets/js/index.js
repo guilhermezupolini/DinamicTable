@@ -7,7 +7,7 @@ $(document).ready(function () {
 	$('#txtNome').focus();
 
 	$('#btnAlterar').hide();
-	$('#btnAlterar').attr("disabled", "disabled");
+	// $('#btnAlterar').attr("disabled", "disabled");
 	$('#btnAnt').attr("disabled", "disabled");
 	$('#btnProx').attr("disabled", "disabled");
 	$('#btnAnt').hide();
@@ -300,7 +300,7 @@ $(document).ready(function () {
     	$('#txtRg').val(arrayDados[id].rg);
     	$('#btnAdicionar').attr("disabled", "disabled");
     	$('#btnAdicionar').hide();
-    	$('#btnAlterar').removeAttr("disabled", "disabled");
+    	// $('#btnAlterar').removeAttr("disabled", "disabled");
     	$('#btnAlterar').show();
     };
 
