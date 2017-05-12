@@ -7,6 +7,7 @@ $(document).ready(function () {
 	$('#txtNome').focus();
 
 	$('#btnAlterar').hide();
+	$('#btnAlterar').attr("disabled", "disabled");
 	$('#btnAnt').attr("disabled", "disabled");
 	$('#btnProx').attr("disabled", "disabled");
 	$('#btnAnt').hide();
@@ -14,9 +15,7 @@ $(document).ready(function () {
 
 	
 
-	var i = 0;
-	var k = 0;
-	var flag = false;
+	var i = 0; //Controla o numero de registros
 	var arrayDados = [];
 	var pagina = 0;
 	var numPagina = 1;
@@ -42,7 +41,7 @@ $(document).ready(function () {
     	    		nascimento : $('#txtDataNascimento').val()
     	    	});
 
-    	    	console.log(arrayDados);
+    	    	// console.log(arrayDados);
 
     	    	$('#totalReg').html(id);
 
@@ -54,16 +53,11 @@ $(document).ready(function () {
     	    	$('#txtCpf').val("");
     	    	$('#txtRg').val("");
     	    	$('#txtNome').focus();
-    	
-    	    	// if(flag)
-    	    	// {
-    	    	// 	$('#nf').hide();
-    	    	// }
 
     	    	carregarTabela();
     	    }
     	    else{
-    	    	alert("Todos os campos devem ser devidamente preenchidos!!!");
+    	    	// alert("Todos os campos obrigatórios com(*) devem ser devidamente preenchidos!!!");
     	    }
     });
 
@@ -98,7 +92,7 @@ $(document).ready(function () {
 	    	carregarTabela();
     	}
 	    else{
-	    	alert("Todos os campos devem ser devidamente preenchidos!!!");
+	    	// alert("Todos os campos obrigatórios com(*) devem ser devidamente preenchidos!!!");
 	    }
     });
 
@@ -196,7 +190,53 @@ $(document).ready(function () {
 		}
     };
 
+
+    $('#txtNome').focus(function(){
+    	$('#divNome').removeClass("has-error");
+    	$('#nomeError').html("");
+    });
+
+    $('#txtCpf').focus(function(){
+    	$('#divCpf').removeClass("has-error");
+    	$('#cpfError').html("");
+    });
+
+    $('#selSexo').focus(function(){
+    	$('#divSexo').removeClass("has-error");
+    	$('#sexoError').html("");
+    });
+
+    $('#txtDataNascimento').focus(function(){
+    	$('#divNascimento').removeClass("has-error");
+    	$('#nascimentoError').html("");
+    });
+
     validaCampos = function(){
+    	if($('#txtNome').val().trim() == "")
+    	{
+    		// alert("oi");
+    		$('#divNome').addClass("has-error");
+    		$('#nomeError').html("Preencha este campo");
+    	}
+
+    	if ($('#txtCpf').val().trim() == "" || $('#txtCpf').val().length < 14)
+    	{
+    		$('#divCpf').addClass("has-error");
+    		$('#cpfError').html("Preencha este campo");
+    	}
+
+    	if($('#selSexo').val() == "")
+    	{
+    		$('#divSexo').addClass("has-error");
+    		$('#sexoError').html("Selecione uma opção");
+    	}
+
+    	if($('#txtDataNascimento').val().trim() == "" || $('#txtDataNascimento').val().length < 10)
+    	{
+    		$('#divNascimento').addClass("has-error");
+    		$('#nascimentoError').html("Preencha este campo");
+    	}
+
     	if(
 	    	$('#txtNome').val().trim() == "" ||
 	    	$('#selSexo').val() == "" ||
@@ -215,23 +255,35 @@ $(document).ready(function () {
     RemoveRow = function(item, id){
 
     	var confirma = confirm("Deseja remover?");
-    	arrayDados.splice(id, 1);
 
-    	console.log(arrayDados);
+    	// console.log(arrayDados);
 
     	if(confirma)
     	{
-    		var tr = $(item).closest('tr');
-	    	tr.fadeOut(0, function(){
-	     		tr.remove(); 
+    		arrayDados.splice(id, 1);
 
-	    	});
+    	// 	var tr = $(item).closest('tr');
+	    // 	tr.fadeOut(0, function(){
+	    //  		tr.remove(); 
+
+	    // });
 
 	    	$('#totalReg').html(--i);
-	    	if (i == 0) 
-	    	{
-	    		$('#nf').show();
-	    	}
+	    	// if (i == 0) 
+	    	// {
+	    	// 	$('#nf').show();
+	    	// }
+
+	    	$('#txtNome').val("");
+	    	$('#selSexo').val("");
+	    	$('#txtDataNascimento').val("");
+	    	$('#txtCpf').val("");
+	    	$('#txtRg').val("");
+
+	    	$('#btnAdicionar').show();
+	    	$('#btnAdicionar').removeAttr("disabled", "disabled");
+	    	$('#btnAlterar').attr("disabled", "disabled");
+	    	$('#btnAlterar').hide();
     	}
 
     	carregarTabela();
