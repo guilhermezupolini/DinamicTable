@@ -20,7 +20,7 @@ $(document).ready(function () {
 	var pagina = 0;
 	var numPagina = 1;
 
-	console.log(arrayDados);
+	// console.log(arrayDados);
 
     $('#totalReg').html(arrayDados.length);
 	$('#numPagina').html(numPagina);
