@@ -219,10 +219,16 @@ $(document).ready(function () {
     		$('#nomeError').html("Preencha este campo");
     	}
 
-    	if ($('#txtCpf').val().trim() == "" || $('#txtCpf').val().length < 14)
+    	if ($('#txtCpf').val().trim() == "")
     	{
     		$('#divCpf').addClass("has-error");
     		$('#cpfError').html("Preencha este campo");
+    	}
+
+    	if($('#txtCpf').val().length < 14 && $('#txtCpf').val().trim() != "")
+    	{
+    		$('#divCpf').addClass("has-error");
+    		$('#cpfError').html("Compo incompleto");
     	}
 
     	if($('#selSexo').val() == "")
@@ -231,10 +237,16 @@ $(document).ready(function () {
     		$('#sexoError').html("Selecione uma opção");
     	}
 
-    	if($('#txtDataNascimento').val().trim() == "" || $('#txtDataNascimento').val().length < 10)
+    	if($('#txtDataNascimento').val().trim() == "")
     	{
     		$('#divNascimento').addClass("has-error");
     		$('#nascimentoError').html("Preencha este campo");
+    	}
+
+    	if($('#txtDataNascimento').val().length < 10 && $('#txtDataNascimento').val().trim() != "")
+    	{
+    		$('#divNascimento').addClass("has-error");
+    		$('#nascimentoError').html("Campo incompleto");
     	}
 
     	if(
