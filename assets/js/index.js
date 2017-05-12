@@ -294,7 +294,7 @@ $(document).ready(function () {
 
 	    	$('#btnAdicionar').show();
 	    	$('#btnAdicionar').removeAttr("disabled", "disabled");
-	    	$('#btnAlterar').attr("disabled", "disabled");
+	    	// $('#btnAlterar').attr("disabled", "disabled");
 	    	$('#btnAlterar').hide();
     	}
 
