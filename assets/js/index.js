@@ -300,6 +300,7 @@ $(document).ready(function () {
     	$('#txtRg').val(arrayDados[id].rg);
     	$('#btnAdicionar').attr("disabled", "disabled");
     	$('#btnAdicionar').hide();
+    	$('#btnAlterar').removeAttr("disabled", "disabled");
     	$('#btnAlterar').show();
     	
     };
