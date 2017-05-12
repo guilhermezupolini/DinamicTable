@@ -29,7 +29,7 @@ $(document).ready(function () {
 
     $('#btnAdicionar').click(function(){
 
-    	if(!validaCampos())
+    	if(validaCampos())
     	{
     		
 	    	var id = ++i;
@@ -68,7 +68,7 @@ $(document).ready(function () {
     });
 
     $('#btnAlterar').click(function(){
-    	if(!validaCampos())
+    	if(validaCampos())
     	{
     		var id = $('#id').val();
     		var nome = $('#txtNome').val();
@@ -203,8 +203,7 @@ $(document).ready(function () {
 	    	$('#txtDataNascimento').val().trim() == "" ||
 	    	$('#txtDataNascimento').val().length < 10 ||
 	    	$('#txtCpf').val().trim() == "" ||
-	    	$('#txtCpf').val().length < 14 ||
-	    	$('#txtRg').val().trim() == ""
+	    	$('#txtCpf').val().length < 14 
     	){
     		return false;
     	}
