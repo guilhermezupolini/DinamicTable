@@ -5,97 +5,58 @@ $(document).ready(function () {
 	$('#txtCpf').mask('000.000.000-00');
 	$('#txtRg').mask('00.000.000-0');
 	$('#txtNome').focus();
-
-	$('#btnAlterar').hide();
-	// $('#btnAlterar').attr("disabled", "disabled");
 	$('#btnAnt').attr("disabled", "disabled");
 	$('#btnProx').attr("disabled", "disabled");
 	$('#btnAnt').hide();
 	$('#btnProx').hide();
 
-	
-
 	var i = 0; //Controla o numero de registros
-	var arrayDados = [];
-	var pagina = 0;
-	var numPagina = 1;
+	var arrayDados = []; //Controla os objetos no registro
+	var pagina = 0; //Controla a paginação da tabela
+	var numPagina = 1; //Controla o numero da pagina
 
-	// console.log(arrayDados);
+    $('#totalReg').html(arrayDados.length); //Inicia o contador de registros na página
+	$('#numPagina').html(numPagina); //Iniciar o contador de páginas na página
 
-    $('#totalReg').html(arrayDados.length);
-	$('#numPagina').html(numPagina);
-
-
-    $('#btnAdicionar').click(function(){
+	//Botão salvar
+    $('#btnSalvar').click(function(){
 
     	if(validaCampos())
     	{
-    		
-	    	var id = ++i;
+    		var idPessoa = $("#id").val().trim(); //Recebe, se tiver, o id do formulario
+
+    		if(idPessoa != "") //Verifica se existe conteudo em idPessoa
+    		{
+    			//Se existir id, então se trata de uma alteração
+			 	arrayDados[idPessoa].nome = $('#txtNome').val();
+		    	arrayDados[idPessoa].cpf = $('#txtCpf').val();
+		    	arrayDados[idPessoa].rg = $('#txtRg').val();
+		    	arrayDados[idPessoa].nascimento = $('#txtDataNascimento').val();
+		    	arrayDados[idPessoa].sexo = $('#selSexo').val();
+    		}
+
+    		else
+    		{
+    			//Caso não exista idPessoa, então se trata de uma adição de informação
+	    		var id = ++i;
     	    	
+    	    	//Insere um objeto com as seguintes informações denro do array
     	    	arrayDados.push({
     	    		nome : $('#txtNome').val(),
     	    		cpf : $('#txtCpf').val(),
     	    		rg : $('#txtRg').val(),
-    	    		sexo : $('#selSexo').val() == "M" ? "Masculino" : "Feminino",
+    	    		sexo : $('#selSexo').val(),
     	    		nascimento : $('#txtDataNascimento').val()
     	    	});
-
-    	    	// console.log(arrayDados);
-
-    	    	$('#totalReg').html(id);
-
-    	    	
-    	
-    	    	$('#txtNome').val("");
-    	    	$('#selSexo').val("");
-    	    	$('#txtDataNascimento').val("");
-    	    	$('#txtCpf').val("");
-    	    	$('#txtRg').val("");
-    	    	$('#txtNome').focus();
-
-    	    	carregarTabela();
     	    }
-    	    else{
-    	    	// alert("Todos os campos obrigatórios com(*) devem ser devidamente preenchidos!!!");
-    	    }
-    });
 
-    $('#btnAlterar').click(function(){
-    	if(validaCampos())
-    	{
-    		var id = $('#id').val();
-    		var nome = $('#txtNome').val();
-	    	var cpf = $('#txtCpf').val();
-	    	var rg = $('#txtRg').val();
-	    	var nascimento = $('#txtDataNascimento').val();
-	    	var sexo = $('#selSexo').val() == "M" ? "Masculino" : "Feminino";
-    		
-    	    	
-	    	arrayDados[id].nome = nome;
-	    	arrayDados[id].cpf = cpf;
-	    	arrayDados[id].rg = rg;
-	    	arrayDados[id].nascimento = nascimento;
-	    	arrayDados[id].sexo = sexo;
-    	
-	    	$('#txtNome').val("");
-	    	$('#selSexo').val("");
-	    	$('#txtDataNascimento').val("");
-	    	$('#txtCpf').val("");
-	    	$('#txtRg').val("");
-	    	
-	
-	    	$('#btnAdicionar').show();
-	    	$('#btnAdicionar').removeAttr("disabled", "disabled");
-	    	$('#btnAlterar').hide();
-
+    	    //Limpar campos e chama a função para preencher a tabela com os valores do array
+    	    limpaCampos();
 	    	carregarTabela();
     	}
-	    else{
-	    	// alert("Todos os campos obrigatórios com(*) devem ser devidamente preenchidos!!!");
-	    }
     });
 
+    //Botão de paginação, anterior
     $('#btnAnt').click(function(){
     	if(pagina > 0)
 		{
@@ -109,6 +70,7 @@ $(document).ready(function () {
 		}
     });
 
+    //Botão de paginação, próximo
 	$('#btnProx').click(function(){
 		if(pagina < arrayDados.length-5)
 		{
@@ -128,20 +90,29 @@ $(document).ready(function () {
     	$('#txtNome').val(retorno);
     });
 
+    //Função para limpar dados dos input após inserir, alterar ou remover
+    limpaCampos = function(){
+    	$("#id").val("");
+    	$('#txtNome').val("");
+    	$('#selSexo').val("");
+    	$('#txtDataNascimento').val("");
+    	$('#txtCpf').val("");
+    	$('#txtRg').val("");
+    	$('#txtNome').focus();
+    };
+
+    //Função para carregar os dados na tabela
     carregarTabela = function(){
-
-    	// alert(q);
-
  		$('#tabelaBody').html("");
-
- 		
+ 		$('#totalReg').html(arrayDados.length);
 
     	for (var i = pagina, j = 0; i < arrayDados.length && j < 5; i++, j++) 
     	{
 	    	var newRow = $("<tr id='tbRow"+i+"'>");
 	    	var cols = "";
+
 	    	cols += "<td id='tbNome"+i+"'>"+arrayDados[i].nome+"</td>";
-	    	cols += "<td id='tbSexo"+i+"'>"+arrayDados[i].sexo+"</td>";
+	    	cols += "<td id='tbSexo"+i+"'>"+(arrayDados[i].sexo == "M" ? "Masculino" : "Feminino")+"</td>";
 	    	cols += "<td id='tbDtNascimento"+i+"'>"+arrayDados[i].nascimento+"</td>";
 	    	cols += "<td id='tbCpf"+i+"'>"+arrayDados[i].cpf+"</td>";
 	    	cols += "<td id='tbRg"+i+"'>"+arrayDados[i].rg+"</td>";
@@ -159,8 +130,8 @@ $(document).ready(function () {
 	    	$('#tabelaBody').append(newRow);
     	}
 
-    	if (arrayDados.length > 5){
-    		
+    	if (arrayDados.length > 5)
+    	{
     		$('#btnProx').removeAttr("disabled", "disabled");
     		$('#btnProx').show();
     		$('#paginacao').show();
@@ -187,6 +158,12 @@ $(document).ready(function () {
     	if(arrayDados.length <= 0)
 		{
 			$('#tabelaBody').append("<tr><td id='nf' colspan='6' style='text-align: center;'>Nenhum registro adicionado.</td></tr>");
+			$('#paginacao').hide();
+		}
+
+		if(arrayDados.length <= 5)
+		{
+			$('#paginacao').hide();
 		}
     };
 
@@ -214,7 +191,6 @@ $(document).ready(function () {
     validaCampos = function(){
     	if($('#txtNome').val().trim() == "")
     	{
-    		// alert("oi");
     		$('#divNome').addClass("has-error");
     		$('#nomeError').html("Preencha este campo");
     	}
@@ -264,56 +240,26 @@ $(document).ready(function () {
     	}
     };
 
-    RemoveRow = function(item, id){
+    RemoveRow = function(id){
 
     	var confirma = confirm("Deseja remover?");
-
-    	// console.log(arrayDados);
 
     	if(confirma)
     	{
     		arrayDados.splice(id, 1);
 
-    	// 	var tr = $(item).closest('tr');
-	    // 	tr.fadeOut(0, function(){
-	    //  		tr.remove(); 
-
-	    // });
-
-	    	$('#totalReg').html(--i);
-	    	// if (i == 0) 
-	    	// {
-	    	// 	$('#nf').show();
-	    	// }
-
-	    	$('#txtNome').val("");
-	    	$('#selSexo').val("");
-	    	$('#txtDataNascimento').val("");
-	    	$('#txtCpf').val("");
-	    	$('#txtRg').val("");
-
-	    	$('#btnAdicionar').show();
-	    	$('#btnAdicionar').removeAttr("disabled", "disabled");
-	    	// $('#btnAlterar').attr("disabled", "disabled");
-	    	$('#btnAlterar').hide();
+	    	limpaCampos();
     	}
-
     	carregarTabela();
-    	
     };
 
     EditRow = function(id){
-    	var sexo = arrayDados[id].sexo == "Masculino" ? "M" : "F";
     	$('#id').val(id);
     	$('#txtNome').val(arrayDados[id].nome);
-    	$('#selSexo').val(sexo);
+    	$('#selSexo').val(arrayDados[id].sexo);
     	$('#txtDataNascimento').val(arrayDados[id].nascimento);
     	$('#txtCpf').val(arrayDados[id].cpf);
     	$('#txtRg').val(arrayDados[id].rg);
-    	$('#btnAdicionar').attr("disabled", "disabled");
-    	$('#btnAdicionar').hide();
-    	// $('#btnAlterar').removeAttr("disabled", "disabled");
-    	$('#btnAlterar').show();
     };
 
     mask = function(val, mask){
