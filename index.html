@@ -45,7 +45,7 @@
             <div class="row">
                 <div class="form-group col-md-3 required" id="divCpf">
                     <label class="control-label" for="txtCpf">CPF:</label>
-                    <input class="form-control" id="txtCpf" name="txtCpf" type="text" placeholder="CPF" maxlength="14" required="" />
+                    <input class="form-control" id="txtCpf" name="txtCpf" type="text" placeholder="CPF" maxlength="11" required="" />
                     <p id="cpfError" style="color: red;"></p>
                 </div>
 
@@ -59,11 +59,21 @@
 
             <hr/>
 
+            <div class="text-left">
+                <label>Mostrar: </label>
+                <select id="selReg">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                </select>
+                <label> registros</label>
+            </div>
+
             <div id="divTabela">
                 <p class="text-right" id="lblTotal"><strong>Total de Registro(s): <span id="totalReg"></span> </strong></p>
                 <table id="tabela" class="table table-bordered">
                     <tr>
-                        <th style="width: 20%">Nome</th>
+                        <th id="colNome" style="width: 20%">Nome <span id="ordenador"></span></th>
                         <th style="width: 10%">Sexo</th>
                         <th style="width: 15%">Data Nascimento</th>
                         <th style="width: 20%">CPF</th>
@@ -77,6 +87,7 @@
                     </tbody>
                 </table>
             </div>
+
             <div style="text-align: right;">
                 <button id="btnAnt" class="btn btn-info" type="button">Anterior</button>
                 <button id="btnProx" class="btn btn-info" type="button">Proximo</button>

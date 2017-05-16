@@ -14,6 +14,8 @@ $(document).ready(function () {
 	var arrayDados = []; //Controla os objetos no registro
 	var pagina = 0; //Controla a paginação da tabela
 	var numPagina = 1; //Controla o numero da pagina
+	var regPagina = 5; //Controla a quantidade de registros a serem exibidos
+	var ordemOrdenacao = "asc";
 
     $('#totalReg').html(arrayDados.length); //Inicia o contador de registros na página
 	$('#numPagina').html(numPagina); //Iniciar o contador de páginas na página
@@ -52,6 +54,7 @@ $(document).ready(function () {
 
     	    //Limpar campos e chama a função para preencher a tabela com os valores do array
     	    limpaCampos();
+    	    // resetDados();
 	    	carregarTabela();
     	}
     });
@@ -60,7 +63,8 @@ $(document).ready(function () {
     $('#btnAnt').click(function(){
     	if(pagina > 0)
 		{
-			carregarTabela(pagina -= 5);
+			pagina -= regPagina;
+			carregarTabela();
 			numPagina -= 1;
 			$('#numPagina').html(numPagina);
 		}
@@ -74,7 +78,8 @@ $(document).ready(function () {
 	$('#btnProx').click(function(){
 		if(pagina < arrayDados.length-5)
 		{
-			carregarTabela(pagina += 5);
+			pagina += regPagina;
+			carregarTabela();
 			numPagina += 1;
 			$('#numPagina').html(numPagina);
 		}
@@ -84,11 +89,59 @@ $(document).ready(function () {
 		}
 	});
 
+	$('#colNome').click(function(){
+		nameSort();
+	});
+
     $('#txtNome').change(function(){
     	var letra = $('#txtNome').val().charAt(0).toUpperCase();
     	var retorno = letra + $('#txtNome').val().substring(1).toLowerCase();
     	$('#txtNome').val(retorno);
     });
+
+
+    $('#selReg').change(function(){
+		regPagina = parseInt($('#selReg').val());
+		console.log(regPagina);
+		resetDados();
+		carregarTabela();
+	});
+
+    $('#txtNome').focus(function(){
+    	$('#divNome').removeClass("has-error");
+    	$('#nomeError').html("");
+    });
+
+    $('#txtCpf').focus(function(){
+    	$('#divCpf').removeClass("has-error");
+    	$('#cpfError').html("");
+    });
+
+	$('#txtCpf').change(function(){
+
+		if(!validaCpf($('#txtCpf').val().replace(/\.|\-/gi, "")))
+		{
+			$('#txtCpf').val("");
+			$('#divCpf').addClass("has-error");
+    		$('#cpfError').html("CPF inválido");
+		}
+	});
+
+    $('#selSexo').focus(function(){
+    	$('#divSexo').removeClass("has-error");
+    	$('#sexoError').html("");
+    });
+
+    $('#txtDataNascimento').focus(function(){
+    	$('#divNascimento').removeClass("has-error");
+    	$('#nascimentoError').html("");
+    });
+
+    resetDados = function(){
+		pagina = 0;
+		numPagina = 1;
+		// regPagina = 5;
+    };
 
     //Função para limpar dados dos input após inserir, alterar ou remover
     limpaCampos = function(){
@@ -106,7 +159,7 @@ $(document).ready(function () {
  		$('#tabelaBody').html("");
  		$('#totalReg').html(arrayDados.length);
 
-    	for (var i = pagina, j = 0; i < arrayDados.length && j < 5; i++, j++) 
+    	for (var i = pagina, j = 0; i < arrayDados.length && j < regPagina; i++, j++) 
     	{
 	    	var newRow = $("<tr id='tbRow"+i+"'>");
 	    	var cols = "";
@@ -130,20 +183,20 @@ $(document).ready(function () {
 	    	$('#tabelaBody').append(newRow);
     	}
 
-    	if (arrayDados.length > 5)
+    	if (arrayDados.length > regPagina)
     	{
     		$('#btnProx').removeAttr("disabled", "disabled");
     		$('#btnProx').show();
     		$('#paginacao').show();
     	}
 
-    	if(pagina >= 5)
+    	if(pagina >= regPagina)
     	{	
     		$('#btnAnt').removeAttr("disabled", "disabled");
     		$('#btnAnt').show();
     	}
 
-    	if (pagina >= 5 && (pagina+5) >= arrayDados.length || arrayDados.length <= 5)
+    	if (pagina >= regPagina && (pagina+regPagina) >= arrayDados.length || arrayDados.length <= regPagina)
     	{
 			$('#btnProx').attr("disabled", "disabled");
     		$('#btnProx').hide();
@@ -161,34 +214,15 @@ $(document).ready(function () {
 			$('#paginacao').hide();
 		}
 
-		if(arrayDados.length <= 5)
+		if(arrayDados.length <= regPagina)
 		{
 			$('#paginacao').hide();
 		}
     };
 
-
-    $('#txtNome').focus(function(){
-    	$('#divNome').removeClass("has-error");
-    	$('#nomeError').html("");
-    });
-
-    $('#txtCpf').focus(function(){
-    	$('#divCpf').removeClass("has-error");
-    	$('#cpfError').html("");
-    });
-
-    $('#selSexo').focus(function(){
-    	$('#divSexo').removeClass("has-error");
-    	$('#sexoError').html("");
-    });
-
-    $('#txtDataNascimento').focus(function(){
-    	$('#divNascimento').removeClass("has-error");
-    	$('#nascimentoError').html("");
-    });
-
     validaCampos = function(){
+    	var regex = '[^a-zA-Z0-9]+';
+
     	if($('#txtNome').val().trim() == "")
     	{
     		$('#divNome').addClass("has-error");
@@ -241,7 +275,6 @@ $(document).ready(function () {
     };
 
     RemoveRow = function(id){
-
     	var confirma = confirm("Deseja remover?");
 
     	if(confirma)
@@ -250,6 +283,7 @@ $(document).ready(function () {
 
 	    	limpaCampos();
     	}
+    	resetDados();
     	carregarTabela();
     };
 
@@ -262,10 +296,76 @@ $(document).ready(function () {
     	$('#txtRg').val(arrayDados[id].rg);
     };
 
+    validaCpf = function(cpf){
+		var soma;
+    	var resto;
+	    soma = 0;
+
+		if (
+			cpf == "00000000000" || 
+			cpf == "11111111111" ||
+			cpf == "22222222222" ||
+			cpf == "33333333333" ||
+			cpf == "44444444444" ||
+			cpf == "55555555555" ||
+			cpf == "66666666666" ||
+			cpf == "77777777777" ||
+			cpf == "88888888888" ||
+			cpf == "99999999999" ||
+			cpf == "12345678909" ||
+			cpf.length > 11
+			) 
+			{
+				return false;
+			}
+	    
+		for (i=1; i<=9; i++) soma = soma + parseInt(cpf.substring(i-1, i)) * (11 - i);
+		resto = (soma * 10) % 11;
+		
+	    if ((resto == 10) || (resto == 11))  resto = 0;
+	    if (resto != parseInt(cpf.substring(9, 10)) ) return false;
+		
+		soma = 0;
+	    for (i = 1; i <= 10; i++) soma = soma + parseInt(cpf.substring(i-1, i)) * (12 - i);
+	    resto = (soma * 10) % 11;
+		
+	    if ((resto == 10) || (resto == 11))  resto = 0;
+	    if (resto != parseInt(cpf.substring(10, 11) ) ) return false;
+
+	    return true;
+    };
+
+    nameSort = function(){
+    	console.log("vamos ordenar");
+    	var cont = 0;
+
+    	if(ordemOrdenacao == "asc")
+    	{
+    		$('#ordenador').removeClass("glyphicon glyphicon-sort-by-alphabet-alt");
+    		$('#ordenador').addClass("glyphicon glyphicon-sort-by-alphabet");
+    		arrayDados.sort(function(a, b){
+    			return a.nome.localeCompare(b.nome);
+    		});
+
+    		ordemOrdenacao = "desc";
+    	}
+    	else
+    	{
+    		$('#ordenador').removeClass("glyphicon glyphicon-sort-by-alphabet");
+    		$('#ordenador').addClass("glyphicon glyphicon-sort-by-alphabet-alt");
+    		arrayDados.sort(function(a, b){
+    			return a.nome.localeCompare(b.nome) * (-1);
+    		});
+
+    		ordemOrdenacao = "asc";
+    	}
+    	carregarTabela();
+    };
+
     mask = function(val, mask){
     	var maskared = "";
     	var k = 0;
-    	for (var i = 0; i < mask.length; i++) 
+    	for (var i = 0; i < mask.length; i++)
     	{
     		if(mask.charAt(i) == "#")
     		{
@@ -277,9 +377,7 @@ $(document).ready(function () {
     			maskared += mask.charAt(i);
     		}
     	}
-
     	return maskared;
     };
-
     
 });
