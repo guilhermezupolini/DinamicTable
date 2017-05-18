@@ -1,6 +1,6 @@
 //Executa quando o documento é carregado
 $(document).ready(function () {
-
+	
 	$('#txtDataNascimento').mask('00/00/0000');
 	$('#txtCpf').mask('000.000.000-00');
 	$('#txtRg').mask('00.000.000-0');
@@ -98,7 +98,6 @@ $(document).ready(function () {
     	var retorno = letra + $('#txtNome').val().substring(1).toLowerCase();
     	$('#txtNome').val(retorno);
     });
-
 
     $('#selReg').change(function(){
 		regPagina = parseInt($('#selReg').val());
