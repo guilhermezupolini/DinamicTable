@@ -40,7 +40,7 @@ $(document).ready(function () {
     		else
     		{
     			//Caso não exista idPessoa, então se trata de uma adição de informação
-	    		var id = ++i;
+	    		// var id = ++i;
     	    	
     	    	//Insere um objeto com as seguintes informações denro do array
     	    	arrayDados.push({
@@ -107,35 +107,24 @@ $(document).ready(function () {
 		carregarTabela();
 	});
 
-    $('#txtNome').focus(function(){
-    	$('#divNome').removeClass("has-error");
-    	$('#nomeError').html("");
-    });
-
-    $('#txtCpf').focus(function(){
-    	$('#divCpf').removeClass("has-error");
-    	$('#cpfError').html("");
-    });
-
-	$('#txtCpf').change(function(){
-
-		if(!validaCpf($('#txtCpf').val().replace(/\.|\-/gi, "")))
-		{
-			$('#txtCpf').val("");
-			$('#divCpf').addClass("has-error");
-    		$('#cpfError').html("CPF inválido");
-		}
+	$('#formulario input').focus(function(){
+		$(this).parents().removeClass("has-error");
+		$(this).next().html("");
 	});
 
-    $('#selSexo').focus(function(){
-    	$('#divSexo').removeClass("has-error");
-    	$('#sexoError').html("");
-    });
+	$('#formulario select').focus(function(){
+		$(this).parents().removeClass("has-error");
+		$(this).next().html("");
+	});
 
-    $('#txtDataNascimento').focus(function(){
-    	$('#divNascimento').removeClass("has-error");
-    	$('#nascimentoError').html("");
-    });
+	$('#txtCpf').blur(function(){
+		if(!validaCpf($(this).val().replace(/\.|\-/gi, "")))
+		{
+			$(this).val("");
+			$(this).parent().addClass("has-error");
+    		$(this).next().html("CPF inválido");
+		}
+	});
 
     resetDados = function(){
 		pagina = 0;
@@ -221,57 +210,34 @@ $(document).ready(function () {
     };
 
     validaCampos = function(){
-    	var regex = '[^a-zA-Z0-9]+';
+    	var valida = true;
 
-    	if($('#txtNome').val().trim() == "")
-    	{
-    		$('#divNome').addClass("has-error");
-    		$('#nomeError').html("Preencha este campo");
-    	}
+    	$('#formulario input').each(function(){
+    		if($(this).attr("required"))
+    		{
+    			if(!$(this).val())
+	    		{
+					$(this).parent().addClass("has-error");
+					$(this).next().html("Preencha este campo");
 
-    	if ($('#txtCpf').val().trim() == "")
-    	{
-    		$('#divCpf').addClass("has-error");
-    		$('#cpfError').html("Preencha este campo");
-    	}
+					valida  = false;
+    			}
+    		}
+    	});
 
-    	if($('#txtCpf').val().length < 14 && $('#txtCpf').val().trim() != "")
-    	{
-    		$('#divCpf').addClass("has-error");
-    		$('#cpfError').html("Compo incompleto");
-    	}
+    	$('#formulario select').each(function(){
+    		if($(this).attr("required"))
+    		{
+    			if(!$(this).val())
+	    		{
+					$(this).parent().addClass("has-error");
+					$(this).next().html("Selecione uma opção");
 
-    	if($('#selSexo').val() == "")
-    	{
-    		$('#divSexo').addClass("has-error");
-    		$('#sexoError').html("Selecione uma opção");
-    	}
-
-    	if($('#txtDataNascimento').val().trim() == "")
-    	{
-    		$('#divNascimento').addClass("has-error");
-    		$('#nascimentoError').html("Preencha este campo");
-    	}
-
-    	if($('#txtDataNascimento').val().length < 10 && $('#txtDataNascimento').val().trim() != "")
-    	{
-    		$('#divNascimento').addClass("has-error");
-    		$('#nascimentoError').html("Campo incompleto");
-    	}
-
-    	if(
-	    	$('#txtNome').val().trim() == "" ||
-	    	$('#selSexo').val() == "" ||
-	    	$('#txtDataNascimento').val().trim() == "" ||
-	    	$('#txtDataNascimento').val().length < 10 ||
-	    	$('#txtCpf').val().trim() == "" ||
-	    	$('#txtCpf').val().length < 14 
-    	){
-    		return false;
-    	}
-    	else{
-    		return true;
-    	}
+					valida  = false;
+    			}
+    		}
+    	});
+    		return valida;
     };
 
     RemoveRow = function(id){
