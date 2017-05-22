@@ -42,7 +42,7 @@ $(document).ready(function () {
     			//Caso não exista idPessoa, então se trata de uma adição de informação
 	    		// var id = ++i;
     	    	
-    	    	//Insere um objeto com as seguintes informações denro do array
+    	    	//Insere um objeto com as seguintes informações dentro do array
     	    	arrayDados.push({
     	    		nome : $('#txtNome').val(),
     	    		cpf : $('#txtCpf').val(),
@@ -52,13 +52,14 @@ $(document).ready(function () {
     	    	});
     	    }
 
-    	    //Limpar campos e chama a função para preencher a tabela com os valores do array
+    	    //Limpar campos do formulário
     	    limpaCampos();
-    	    // resetDados();
+    	    //Carregar dados da tabela com o conteúdo do array
 	    	carregarTabela();
     	}
     });
 
+    //Botão para limpar os campos formulário
     $('#btnLimpar').click(function(){
     	limpaCampos();
     });
@@ -109,12 +110,12 @@ $(document).ready(function () {
 		carregarTabela();
 	});
 
-	$('#formulario input').focus(function(){
+	$('form input').focus(function(){
 		$(this).parents().removeClass("has-error");
 		$(this).parent().find('p').html("");
 	});
 
-	$('#formulario select').change(function(){
+	$('form select').change(function(){
 		$(this).parents().removeClass("has-error");
 		$(this).parent().find('p').html("");
 	});
