@@ -59,6 +59,10 @@ $(document).ready(function () {
     	}
     });
 
+    $('#btnLimpar').click(function(){
+    	limpaCampos();
+    });
+
     //Botão de paginação, anterior
     $('#btnAnt').click(function(){
     	if(pagina > 0)
@@ -101,19 +105,18 @@ $(document).ready(function () {
 
     $('#selReg').change(function(){
 		regPagina = parseInt($('#selReg').val());
-		console.log(regPagina);
 		resetDados();
 		carregarTabela();
 	});
 
 	$('#formulario input').focus(function(){
 		$(this).parents().removeClass("has-error");
-		$(this).next().html("");
+		$(this).parent().find('p').html("");
 	});
 
-	$('#formulario select').focus(function(){
+	$('#formulario select').change(function(){
 		$(this).parents().removeClass("has-error");
-		$(this).next().html("");
+		$(this).parent().find('p').html("");
 	});
 
 	$('#txtCpf').blur(function(){
@@ -121,7 +124,7 @@ $(document).ready(function () {
 		{
 			$(this).val("");
 			$(this).parent().addClass("has-error");
-    		$(this).next().html("CPF inválido");
+    		$(this).parent().find('p').html("CPF inválido");
 		}
 	});
 
@@ -211,26 +214,26 @@ $(document).ready(function () {
     validaCampos = function(){
     	var valida = true;
 
-    	$('#formulario input').each(function(){
+    	$('form input').each(function(){
     		if($(this).attr("required"))
     		{
     			if(!$(this).val())
 	    		{
 					$(this).parent().addClass("has-error");
-					$(this).next().html("Preencha este campo");
+					$(this).parent().find('p').html("Preencha este campo");
 
 					valida  = false;
     			}
     		}
     	});
 
-    	$('#formulario select').each(function(){
+    	$('form select').each(function(){
     		if($(this).attr("required"))
     		{
     			if(!$(this).val())
 	    		{
 					$(this).parent().addClass("has-error");
-					$(this).next().html("Selecione uma opção");
+					$(this).parent().find('p').html("Selecione uma opção");
 
 					valida  = false;
     			}
