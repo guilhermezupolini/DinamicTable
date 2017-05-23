@@ -214,27 +214,19 @@ $(document).ready(function () {
 
     validaCampos = function(){
     	var valida = true;
+    	var elemento = ['input', 'select'];
 
-    	$('form input').each(function(){
+    	$('form '+elemento).each(function(){
     		if($(this).attr("required"))
     		{
-    			if(!$(this).val())
+    			if(!$(this).val().trim())
 	    		{
 					$(this).parent().addClass("has-error");
-					$(this).parent().find('p').html("Preencha este campo");
 
-					valida  = false;
-    			}
-    		}
-    	});
-
-    	$('form select').each(function(){
-    		if($(this).attr("required"))
-    		{
-    			if(!$(this).val())
-	    		{
-					$(this).parent().addClass("has-error");
-					$(this).parent().find('p').html("Selecione uma opção");
+					if($(this).prop("tagName").toLowerCase() == 'select')
+						$(this).parent().find('p').html("Selecione uma opção");
+					else
+						$(this).parent().find('p').html("Preencha este campo");
 
 					valida  = false;
     			}
